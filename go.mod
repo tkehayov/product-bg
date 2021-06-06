@@ -1,4 +1,4 @@
-module https://git.heroku.com/nameless-retreat-83389.git
+module https://github.com/tkehayov/product-bg.git
 
 go 1.14
 
