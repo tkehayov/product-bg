@@ -2,11 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7b37f4b3-cfbb-4606-993e-8f859f5af93b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker.env" beforeDir="false" afterPath="$PROJECT_DIR$/docker.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker/volumes/products/app/main" beforeDir="false" afterPath="$PROJECT_DIR$/docker/volumes/products/app/main" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,14 +50,33 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/cmd" />
       <recent name="$PROJECT_DIR$/.docker_build" />
       <recent name="$PROJECT_DIR$/app" />
-      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Makefile Target.heroku">
+  <component name="RunManager" selected="Makefile Target.docker-build">
+    <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" nameIsGenerated="true">
+      <module name="product-bg" />
+      <working_directory value="$PROJECT_DIR$" />
+      <envs>
+        <env name="PORT" value="8080" />
+      </envs>
+      <kind value="FILE" />
+      <package value="https:" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/main.go" />
+      <method v="2" />
+    </configuration>
     <configuration name="clean" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
       <makefile filename="$PROJECT_DIR$/Makefile" target="clean" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration name="docker-build" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/makefile" target="docker-build" workingDirectory="" arguments="">
         <envs />
       </makefile>
       <method v="2" />
@@ -66,8 +87,15 @@
       </makefile>
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Go Build.go build main.go" />
+      <item itemvalue="Makefile Target.clean" />
+      <item itemvalue="Makefile Target.heroku" />
+      <item itemvalue="Makefile Target.docker-build" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Makefile Target.docker-build" />
         <item itemvalue="Makefile Target.heroku" />
         <item itemvalue="Makefile Target.clean" />
       </list>
@@ -87,6 +115,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
