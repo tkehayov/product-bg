@@ -18,6 +18,5 @@ services:
     image: mongo:latest
     ports:
       - 37017:27017
-
     volumes:
       - ./docker/volumes/products/db:/var/lib/db
