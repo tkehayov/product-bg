@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7b37f4b3-cfbb-4606-993e-8f859f5af93b" name="Default Changelist" comment="" />
+    <list default="true" id="7b37f4b3-cfbb-4606-993e-8f859f5af93b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/products/repo/product.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker/volumes/products/app/main" beforeDir="false" afterPath="$PROJECT_DIR$/docker/volumes/products/app/main" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/products/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/products/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/products/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/products/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/products/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/products/main.go" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -42,11 +49,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/products/ala" />
       <recent name="$PROJECT_DIR$/products" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/cmd" />
       <recent name="$PROJECT_DIR$/.docker_build" />
-      <recent name="$PROJECT_DIR$/app" />
     </key>
   </component>
   <component name="RunManager" selected="Makefile Target.docker-build">
@@ -69,7 +76,7 @@
       <method v="2" />
     </configuration>
     <configuration name="docker-build" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
-      <makefile filename="$PROJECT_DIR$/makefile" target="docker-build" workingDirectory="" arguments="">
+      <makefile filename="$PROJECT_DIR$/products/makefile" target="docker-build" workingDirectory="" arguments="">
         <envs />
       </makefile>
       <method v="2" />
@@ -98,6 +105,16 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+      </list>
+    </option>
+  </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
@@ -115,5 +132,16 @@
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/products/repo/product.go</url>
+          <line>48</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

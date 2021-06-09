@@ -1,62 +1,31 @@
 package main
 
 import (
-	"context"
-	"fmt"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"io"
-	"log"
+	"github.com/gorilla/mux"
+	log "github.com/sirupsen/logrus"
+	"github.com/tkehayov/product-bg.git/repo"
 	"net/http"
 	"os"
-	"time"
 )
 
-func hello(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("port habe: ")
-	io.WriteString(w, "Hello World71!")
-
-}
-func hi(w http.ResponseWriter, r *http.Request) {
-	client, ctx := connect()
-	defer client.Disconnect(ctx)
-
-	db := client.Database("products")
-	prCol := db.Collection("productInfo")
-
-	_, err := prCol.InsertOne(ctx, bson.D{
-		{Key: "title", Value: "The Polyglot Developer Podcast"},
-		{Key: "author", Value: "Nic Raboy"},
+func init() {
+	log.SetFormatter(&log.TextFormatter{
+		DisableColors: false,
+		FullTimestamp: true,
 	})
-
-	if err != nil {
-		fmt.Println("Error insert many: ", err)
-	}
-
-}
-
-func connect() (*mongo.Client, context.Context) {
-	env := os.Getenv("MONGO_URL")
-	fmt.Println("emc", env)
-
-	client, err := mongo.NewClient(options.Client().ApplyURI(env))
-	if err != nil {
-		log.Fatal("error Connection", err)
-	}
-
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	err = client.Connect(ctx)
-
-	return client, ctx
-
+	log.SetOutput(os.Stdout)
 }
 
 func main() {
-
+	log.Info("PRODUCT SERVICE STARTED")
 	port := os.Getenv("PORT")
 
-	http.HandleFunc("/", hello)
-	http.HandleFunc("/hi", hi)
-	http.ListenAndServe(":"+port, nil)
+	router := mux.NewRouter()
+	router.HandleFunc("/product", GetOne)
+
+	log.Fatal(http.ListenAndServe(":"+port, router))
+}
+
+func GetOne(w http.ResponseWriter, r *http.Request) {
+	repo.GetOne()
 }
