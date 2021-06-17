@@ -2,18 +2,51 @@ package repo
 
 import (
 	"context"
-	"fmt"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"os"
 	"time"
 )
 
+type Product struct {
+	ID      string  `bson:"_id"`
+	Name    string  `json:"name"`
+	CodeId  string  `json:"codeId"`
+	Gallery Gallery `json:"gallery"`
+}
+
+type Gallery struct {
+	FeatureImage string   `json:"featureImage"`
+	Images       []string `json:"images"`
+}
+
+func GetOne(id string) Product {
+	prodId, errProd := primitive.ObjectIDFromHex(id)
+	if errProd != nil {
+		log.Error("product id not found")
+	}
+	client, ctx := connect()
+	defer client.Disconnect(ctx)
+
+	db := client.Database("products")
+	collection := db.Collection("products")
+
+	product := bson.D{{"_id", prodId}}
+	var result Product
+
+	err := collection.FindOne(context.TODO(), product).Decode(&result)
+	if err != nil {
+		log.Error(err)
+	}
+
+	return result
+}
+
 func connect() (*mongo.Client, context.Context) {
 	env := os.Getenv("MONGO_URL")
-	fmt.Println("emc", env)
 
 	client, err := mongo.NewClient(options.Client().ApplyURI(env))
 	if err != nil {
@@ -24,27 +57,4 @@ func connect() (*mongo.Client, context.Context) {
 	err = client.Connect(ctx)
 
 	return client, ctx
-}
-
-type Product struct {
-	ID              string     `bson:"_id"`
-	codeId        string `json:"children"`
-}
-
-func GetOne() {
-	client, ctx := connect()
-	defer client.Disconnect(ctx)
-
-	db := client.Database("products")
-	prCol := db.Collection("products")
-
-	filter := bson.D{{"codeId", "FQC-09478"}}
-	var result Product
-
-	err := prCol.FindOne(context.TODO(), filter).Decode(&result)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	log.Error("result",result)
 }
