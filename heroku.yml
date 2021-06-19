@@ -1,3 +1,4 @@
 build:
   docker:
-    web: ./products/Dockerfile
+    products: ./products/Dockerfile
+    merchants: ./merchants/Dockerfile

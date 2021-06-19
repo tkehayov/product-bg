@@ -18,11 +18,11 @@ func init() {
 }
 
 func main() {
-	log.Info("MERCHANTS SERVICE STARTED")
+	log.Info("PRODUCT SERVICE STARTED")
 	port := os.Getenv("PORT")
 
 	router := mux.NewRouter()
-	router.HandleFunc("/merchants/{id}", GetOne)
+	router.HandleFunc("/product/{id}", GetOne)
 
 	log.Error(http.ListenAndServe(":"+port, router))
 }
