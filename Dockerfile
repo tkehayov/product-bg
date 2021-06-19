@@ -1,9 +1,11 @@
 FROM golang:1.16
 
 RUN mkdir /app
-ADD . /app
+ADD products /app
+ADD merchants /app
 WORKDIR /app
-RUN go build -o main .
+RUN go build -o products .
+RUN go build -o merchants .
 RUN go get go.mongodb.org/mongo-driver/bson
 RUN go get go.mongodb.org/mongo-driver/mongo
-CMD ["/app/main"]
+CMD ["/app/products","/app/merchants"]
