@@ -1,4 +1,0 @@
-build:
-  docker:
-    products: ./products/Dockerfile
-    merchants: ./merchants/Dockerfile
