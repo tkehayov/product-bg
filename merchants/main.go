@@ -18,18 +18,18 @@ func init() {
 }
 
 func main() {
-	log.Info("PRODUCT SERVICE STARTED")
+	log.Info("MERCHANT SERVICE STARTED")
 	port := os.Getenv("PORT")
 
 	router := mux.NewRouter()
-	router.HandleFunc("/product/{id}", GetOne)
+	router.HandleFunc("/merchants/{id}", GetOne)
 
 	log.Error(http.ListenAndServe(":"+port, router))
 }
 
-func GetOne(w http.ResponseWriter, r *http.Request)  {
-	params:=mux.Vars(r)
-	id:= params["id"]
+func GetOne(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	id := params["id"]
 
 	product := repo.GetOne(id)
 
