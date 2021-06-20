@@ -50,7 +50,7 @@ func connect() (*mongo.Client, context.Context) {
 
 	client, err := mongo.NewClient(options.Client().ApplyURI(env))
 	if err != nil {
-		log.Error("error Connection", err)
+		log.Error("Cannot connect to db", err)
 	}
 
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
