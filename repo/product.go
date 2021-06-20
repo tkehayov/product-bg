@@ -47,14 +47,15 @@ func GetOne(id string) Product {
 
 func connect() (*mongo.Client, context.Context) {
 	env := os.Getenv("MONGO_URL")
-
 	client, err := mongo.NewClient(options.Client().ApplyURI(env))
 	if err != nil {
 		log.Error("Cannot connect to db", err)
 	}
 
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	err = client.Connect(ctx)
-
+	errConn := client.Connect(ctx)
+	if errConn != nil {
+		log.Error("Error connection: ", errConn)
+	}
 	return client, ctx
 }
