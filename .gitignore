@@ -1,4 +1,4 @@
-.idea
+../.idea
 .docker_build
 products/makefile
 docker
