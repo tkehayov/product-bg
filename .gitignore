@@ -2,3 +2,4 @@
 .docker_build
 products/makefile
 docker
+docker-compose
