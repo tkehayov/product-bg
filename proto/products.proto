@@ -1,0 +1,19 @@
+syntax = "proto3";
+package productsa;
+option go_package = "/product-provider";
+
+message Message {
+  string merchantId = 1;
+  repeated Product products = 2;
+}
+
+message Product {
+  string codeId = 1;
+  double price = 2;
+  double deliveryPrice = 3;
+  string url = 4;
+}
+
+service ProductService {
+  rpc sendProducts(Message) returns (Message) {}
+}

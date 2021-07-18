@@ -1,5 +1,6 @@
-../.idea
+.idea
 .docker_build
-products/makefile
+products-provider/makefile
+proto/products
 docker
-docker-compose
+go.sum
