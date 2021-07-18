@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
-	"github.com/tkehayov/product-bg.git/products"
-	proto "github.com/tkehayov/product-bg.git/proto/products"
+	"github.com/tkehayov/product-bg.git/products-provider/products"
+	provider "github.com/tkehayov/product-bg.git/proto/product-provider"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"io/ioutil"
@@ -65,15 +65,15 @@ func runClient(products products.ProductDto) {
 	}
 	defer conn.Close()
 
-	c := proto.NewProductServiceClient(conn)
+	c := provider.NewProductServiceClient(conn)
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	var chatPr []*proto.Product
+	var chatPr []*provider.Product
 	for _, pr := range products.Products {
 
-		chatPr = append(chatPr, &proto.Product{
+		chatPr = append(chatPr, &provider.Product{
 			CodeId:        pr.CodeId,
 			Price:         pr.Price,
 			DeliveryPrice: pr.DeliveryPrice,
@@ -81,7 +81,7 @@ func runClient(products products.ProductDto) {
 		})
 	}
 
-	r, err := c.SendProducts(ctx, &proto.Message{
+	r, err := c.SendProducts(ctx, &provider.Message{
 		MerchantId: products.MerchantId,
 		Products:   chatPr,
 	})
