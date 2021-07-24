@@ -5,7 +5,8 @@ import (
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 	"github.com/tkehayov/product-bg.git/products-provider/products"
-	provider "github.com/tkehayov/product-bg.git/proto/product-provider"
+	"github.com/tkehayov/product-bg.git/proto/provider"
+
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"io/ioutil"

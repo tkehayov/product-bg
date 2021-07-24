@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
-	"github.com/tkehayov/product-bg.git/repo"
+	"github.com/tkehayov/product-bg.git/merchants/repo"
 	"io/ioutil"
 	"net/http"
 	"os"

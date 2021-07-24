@@ -2,13 +2,24 @@ package main
 
 import (
 	log "github.com/sirupsen/logrus"
-	provider "github.com/tkehayov/product-bg.git/proto/product-provider"
+	"github.com/tkehayov/product-bg/provider"
+
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"net"
+	"os"
 )
 
+func init() {
+	log.SetFormatter(&log.TextFormatter{
+		DisableColors: false,
+		FullTimestamp: true,
+	})
+	log.SetOutput(os.Stdout)
+}
+
 func main() {
+	log.Info("PRODUCTS PROVIDER SERVICE STARTED")
 	lis, err1 := net.Listen("tcp", ":50051")
 	if err1 != nil {
 		log.Fatalf("failed to listen: %v", err1)
@@ -25,7 +36,7 @@ type server struct {
 }
 
 func (s *server) SendProducts(ctx context.Context, in *provider.Message) (*provider.Message, error) {
-	log.Print("Receivedd: ", in)
+	log.Print("Received: ", in)
 	return &provider.Message{
 		MerchantId: in.MerchantId,
 	}, nil

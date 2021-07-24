@@ -3,4 +3,4 @@
 products-provider/makefile
 docker
 go.sum
-*.pb.go
+#*.pb.go

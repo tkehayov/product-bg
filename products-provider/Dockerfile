@@ -4,6 +4,5 @@ RUN mkdir /app
 ADD . /app
 WORKDIR /app
 RUN go build -o main .
-RUN go get go.mongodb.org/mongo-driver/bson
-RUN go get go.mongodb.org/mongo-driver/mongo
+RUN go mod tidy
 CMD ["/app/main"]
