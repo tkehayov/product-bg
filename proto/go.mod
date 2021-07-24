@@ -1,4 +1,4 @@
-module github.com/tkehayov/product-bg
+module github.com/tkehayov/product-bg.git/proto/v1
 
 go 1.14
 
