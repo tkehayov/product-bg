@@ -4,10 +4,9 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
-	"github.com/tkehayov/product-bg.git/repo"
-
 	"net/http"
 	"os"
+	"product-bg/products/repo"
 )
 
 func init() {

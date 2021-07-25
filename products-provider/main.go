@@ -4,24 +4,15 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
-	"github.com/tkehayov/product-bg.git/products-provider/products"
-	"github.com/tkehayov/product-bg.git/proto/provider"
-
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"product-bg/product-provider/products"
+	"product-bg/proto/provider"
 	"time"
 )
-
-func init() {
-	log.SetFormatter(&log.TextFormatter{
-		DisableColors: false,
-		FullTimestamp: true,
-	})
-	log.SetOutput(os.Stdout)
-}
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{
