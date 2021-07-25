@@ -9,7 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"product-bg/product-provider/products"
+	"product-bg/products-provider/products"
 	"product-bg/proto/provider"
 	"time"
 )
@@ -25,7 +25,7 @@ func init() {
 func main() {
 	log.Info("PRODUCTS PROVIDER SERVICE STARTED")
 	port := os.Getenv("PORT")
-
+	log.Info("PORT", port)
 	router := mux.NewRouter()
 	router.HandleFunc("/products-provider", ingest).Methods("POST")
 
