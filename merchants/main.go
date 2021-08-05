@@ -32,18 +32,28 @@ func main() {
 
 	router := mux.NewRouter()
 	router.HandleFunc("/merchants", createNewUser).Methods("POST")
+	router.HandleFunc("/merchants/session", login).Methods("POST")
 
 	log.Error(http.ListenAndServe(":"+port, router))
 }
 
 func createNewUser(w http.ResponseWriter, r *http.Request) {
-	merchants := repo.Merchant{}
+	merchant := repo.Merchant{}
 	body, _ := ioutil.ReadAll(r.Body)
-	unmarshall(body, &merchants)
+	unmarshall(body, &merchant)
 
-	repo.Register(merchants)
+	repo.Register(merchant)
 }
 
+func login(w http.ResponseWriter, r *http.Request) {
+	merchant := repo.Merchant{}
+	body, _ := ioutil.ReadAll(r.Body)
+	unmarshall(body, &merchant)
+
+	match := repo.CredentialsMatch(merchant)
+	//TODO CONTINUE WITH MATCH
+	log.Error(match)
+}
 func unmarshall(d []byte, merchant *repo.Merchant) {
 	err := json.Unmarshal(d, &merchant)
 	if err != nil {
