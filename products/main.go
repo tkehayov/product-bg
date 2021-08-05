@@ -20,7 +20,6 @@ func init() {
 func main() {
 	log.Info("PRODUCT SERVICE STARTED")
 	port := os.Getenv("PORT")
-
 	router := mux.NewRouter()
 	router.HandleFunc("/products/{id}", GetOne)
 

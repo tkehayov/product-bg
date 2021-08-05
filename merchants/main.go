@@ -41,7 +41,6 @@ func createNewUser(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(r.Body)
 	unmarshall(body, &merchants)
 
-	log.Info(merchants)
 	repo.Register(merchants)
 }
 

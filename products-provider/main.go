@@ -25,7 +25,6 @@ func init() {
 func main() {
 	log.Info("PRODUCTS PROVIDER SERVICE STARTED")
 	port := os.Getenv("PORT")
-	log.Info("PORT", port)
 	router := mux.NewRouter()
 	router.HandleFunc("/products-provider", ingest).Methods("POST")
 
@@ -38,7 +37,6 @@ func ingest(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(r.Body)
 	unmarshall(body, &products)
 
-	log.Info(products)
 	runClient(products)
 }
 
@@ -51,7 +49,8 @@ func unmarshall(d []byte, productDto *products.ProductDto) {
 }
 
 func runClient(products products.ProductDto) {
-	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure(), grpc.WithBlock())
+	url := os.Getenv("PRODUCTS_PROVIDER_CONSUMER")
+	conn, err := grpc.Dial(url, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
@@ -78,7 +77,7 @@ func runClient(products products.ProductDto) {
 		Products:   chatPr,
 	})
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		log.Fatalf("could not send products: %v", err)
 	}
 	log.Printf("Client: %s", r.GetMerchantId())
 }

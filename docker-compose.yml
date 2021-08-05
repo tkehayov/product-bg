@@ -2,12 +2,11 @@ version: '3'
 
 services:
   products:
-    image: golang:1.14.1-buster
+    image: golang:1.16-alpine3.14
     depends_on:
       - db-products
     ports:
       - 8080:8080
-      - 50051:50051
     volumes:
       - ./docker/volumes/products/app:/go:ro
     command: ./main
@@ -16,11 +15,26 @@ services:
       PORT: 8080
     tty: true
 
+  products-provider-consumer:
+    image: golang:1.16-alpine3.14
+    depends_on:
+      - db-products-merchants
+    ports:
+      - 50051:50051
+    volumes:
+      - ./docker/volumes/products-provider-consumer/app:/go:ro
+    command: ./products-provider
+    environment:
+      MONGO_URL: mongodb://db-products-merchants:27017/products-merchants
+      PROVIDER_PORT: 50051
+    tty: true
+
   products-provider:
-    image: golang:1.14.1-buster
+    image: golang:1.16-alpine3.14
     ports:
       - 8082:8080
     environment:
+      PRODUCTS_PROVIDER_CONSUMER: products-provider-consumer:50051
       PORT: 8080
     volumes:
       - ./docker/volumes/products-provider/app:/go:ro
@@ -28,7 +42,7 @@ services:
     tty: true
 
   merchants:
-    image: golang:1.14.1-buster
+    image: golang:1.16-alpine3.14
     depends_on:
       - db-merchants
     ports:
@@ -54,3 +68,10 @@ services:
       - 37018:27017
     volumes:
       - ./docker/volumes/merchants/db:/var/lib/db
+
+  db-products-merchants:
+    image: mongo:latest
+    ports:
+      - 37019:27017
+    volumes:
+      - ./docker/volumes/products-provider-consumer/db:/var/lib/db
