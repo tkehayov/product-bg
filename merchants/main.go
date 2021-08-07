@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
@@ -9,14 +11,6 @@ import (
 	"os"
 	"product-bg/merchants/repo"
 )
-
-func init() {
-	log.SetFormatter(&log.TextFormatter{
-		DisableColors: false,
-		FullTimestamp: true,
-	})
-	log.SetOutput(os.Stdout)
-}
 
 func init() {
 	log.SetFormatter(&log.TextFormatter{
@@ -51,9 +45,38 @@ func login(w http.ResponseWriter, r *http.Request) {
 	unmarshall(body, &merchant)
 
 	match := repo.CredentialsMatch(merchant)
-	//TODO CONTINUE WITH MATCH
-	log.Error(match)
+	if match {
+		userCookie := generateUserCookie(merchant)
+		usernameCookie := generateUserNameCookie(merchant)
+		http.SetCookie(w, userCookie)
+		http.SetCookie(w, usernameCookie)
+		return
+	}
+	w.WriteHeader(http.StatusUnauthorized)
+
 }
+
+func generateUserNameCookie(m repo.Merchant) *http.Cookie {
+	return &http.Cookie{
+		Name:   "username",
+		Value:  m.Username,
+		MaxAge: 86400,
+	}
+}
+
+func generateUserCookie(m repo.Merchant) *http.Cookie {
+	userpass := m.Username + m.Password
+	h := sha256.New()
+	h.Write([]byte(userpass))
+	hashString := hex.EncodeToString(h.Sum(nil))
+
+	return &http.Cookie{
+		Name:   "logged",
+		Value:  hashString,
+		MaxAge: 86400,
+	}
+}
+
 func unmarshall(d []byte, merchant *repo.Merchant) {
 	err := json.Unmarshal(d, &merchant)
 	if err != nil {

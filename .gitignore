@@ -1,6 +1,5 @@
 .idea
 .docker_build
-products-provider/makefile
 docker
 go.sum
 #*.pb.go

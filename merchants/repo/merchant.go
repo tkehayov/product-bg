@@ -4,6 +4,7 @@ import (
 	"context"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"os"
@@ -14,6 +15,13 @@ type Merchant struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 	Website  string `json:"website"`
+}
+
+type MerchantEntity struct {
+	ID       primitive.ObjectID `bson:"_id, omitempty"`
+	Username string             `json:"username"`
+	Password string             `json:"password"`
+	Website  string             `json:"website"`
 }
 
 func Register(m Merchant) {
