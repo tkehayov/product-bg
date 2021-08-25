@@ -10,8 +10,9 @@ message Message {
 message Product {
   string codeId = 1;
   double price = 2;
-  double deliveryPrice = 3;
+  double shippingFee = 3;
   string url = 4;
+  string productTitle = 5;
 }
 
 service ProductService {

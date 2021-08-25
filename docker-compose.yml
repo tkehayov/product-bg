@@ -18,14 +18,14 @@ services:
   products-provider-consumer:
     image: golang:1.16-alpine3.14
     depends_on:
-      - db-products-merchants
+      - db-products
     ports:
       - 50051:50051
     volumes:
       - ./docker/volumes/products-provider-consumer/app:/go:ro
-    command: ./products-provider
+    command: ./products-consumer
     environment:
-      MONGO_URL: mongodb://db-products-merchants:27017/products-merchants
+      MONGO_URL: mongodb://db-products:27017/products
       PROVIDER_PORT: 50051
     tty: true
 

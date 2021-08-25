@@ -65,10 +65,11 @@ func runClient(products products.ProductDto) {
 	for _, pr := range products.Products {
 
 		chatPr = append(chatPr, &provider.Product{
-			CodeId:        pr.CodeId,
-			Price:         pr.Price,
-			DeliveryPrice: pr.DeliveryPrice,
-			Url:           pr.Url,
+			CodeId:       pr.CodeId,
+			Price:        pr.Price,
+			ProductTitle: pr.ProductTitle,
+			ShippingFee:  pr.ShippingFee,
+			Url:          pr.Url,
 		})
 	}
 

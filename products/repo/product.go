@@ -13,9 +13,9 @@ import (
 
 type Product struct {
 	ID      string  `bson:"_id" json:"id"`
-	Name    string  `json:"name"`
-	CodeId  string  `json:"codeId"`
-	Gallery Gallery `json:"gallery"`
+	Name    string  `bson:"name" json:"name"`
+	CodeId  string  `bson:"codeId" json:"codeId"`
+	Gallery Gallery `bson:"gallery" json:"gallery"`
 }
 
 type Gallery struct {

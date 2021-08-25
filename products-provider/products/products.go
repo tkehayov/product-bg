@@ -6,8 +6,9 @@ type ProductDto struct {
 }
 
 type Product struct {
-	CodeId        string  `xml:"codeId" json:"codeId"`
-	Price         float64 `xml:"price" json:"price"`
-	DeliveryPrice float64 `xml:"deliveryPrice" json:"deliveryPrice"`
-	Url           string  `xml:"url" json:"url"`
+	CodeId       string  `xml:"codeId" json:"codeId"`
+	Price        float64 `xml:"price" json:"price"`
+	ShippingFee  float64 `xml:"shippingFee" json:"shippingFee"`
+	ProductTitle string  `xml:"productTitle" json:"productTitle"`
+	Url          string  `xml:"url" json:"url"`
 }
