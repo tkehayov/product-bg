@@ -59,20 +59,50 @@ func UpdateProduct(m *provider.Message) {
 	defer client.Disconnect(ctx)
 
 	db := client.Database("products")
-
 	collection := db.Collection("products")
 
-	//TODO loop products
-	res, err := collection.UpdateOne(ctx, bson.M{"codeId": m.Products[0].CodeId}, bson.D{
-		{"$set", bson.D{{"merchant",
-			Merchant{ID: m.MerchantId, ProductTitle: m.Products[0].ProductTitle, Price: m.Products[0].Price, ShippingFee: m.Products[0].ShippingFee, Url: m.Products[0].Url}}}},
-	})
-	//TODO update instead of insert
-	//_, err := collection.InsertOne(ctx, m)
-	if err != nil {
-		log.Error("Couldn't update products: ", err.Error())
+	for _, product := range m.Products {
+		merchant := Merchant{
+			ID:           m.MerchantId,
+			ProductTitle: product.ProductTitle,
+			Price:        product.Price,
+			ShippingFee:  product.ShippingFee,
+			Url:          product.Url,
+		}
+
+		res, err := updateMerchant(collection, ctx, product, merchant)
+
+		if err != nil {
+			resultNewMerchant, errNewMerchant := addMerchant(collection, ctx, product, merchant)
+			if errNewMerchant != nil {
+				log.Error("Cannot add new merchant: ", errNewMerchant.Error())
+			}
+
+			log.Info("Inserted new merchant to a product", resultNewMerchant.ModifiedCount)
+			continue
+		}
+
+		log.Info("Updated merchant product", res.ModifiedCount)
 	}
-	log.Info("Updated merchant product", res.ModifiedCount)
+}
+
+func updateMerchant(collection *mongo.Collection, ctx context.Context, product *provider.Product, merchant Merchant) (*mongo.UpdateResult, error) {
+	opts := options.Update().SetUpsert(true)
+	res, err := collection.UpdateOne(ctx, bson.M{"codeId": product.CodeId, "merchants._id": merchant.ID}, bson.D{
+		{"$set",
+			bson.D{{"merchants.$", merchant}},
+		},
+	}, opts)
+
+	return res, err
+}
+
+func addMerchant(collection *mongo.Collection, ctx context.Context, product *provider.Product, merchant Merchant) (*mongo.UpdateResult, error) {
+	resultNewMerchant, err := collection.UpdateOne(ctx, bson.M{"codeId": product.CodeId}, bson.D{
+		{"$push", bson.D{{"merchants", merchant}}},
+	})
+
+	return resultNewMerchant, err
 }
 
 func connect() (*mongo.Client, context.Context) {

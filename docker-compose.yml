@@ -15,14 +15,14 @@ services:
       PORT: 8080
     tty: true
 
-  products-provider-consumer:
+  products-consumer:
     image: golang:1.16-alpine3.14
     depends_on:
       - db-products
     ports:
       - 50051:50051
     volumes:
-      - ./docker/volumes/products-provider-consumer/app:/go:ro
+      - ./docker/volumes/products-consumer/app:/go:ro
     command: ./products-consumer
     environment:
       MONGO_URL: mongodb://db-products:27017/products
@@ -34,7 +34,7 @@ services:
     ports:
       - 8082:8080
     environment:
-      PRODUCTS_PROVIDER_CONSUMER: products-provider-consumer:50051
+      PRODUCTS_PROVIDER_CONSUMER: products-consumer:50051
       PORT: 8080
     volumes:
       - ./docker/volumes/products-provider/app:/go:ro
@@ -68,10 +68,3 @@ services:
       - 37018:27017
     volumes:
       - ./docker/volumes/merchants/db:/var/lib/db
-
-  db-products-merchants:
-    image: mongo:latest
-    ports:
-      - 37019:27017
-    volumes:
-      - ./docker/volumes/products-provider-consumer/db:/var/lib/db
