@@ -12,15 +12,29 @@ import (
 )
 
 type Product struct {
-	ID      string  `bson:"_id" json:"id"`
-	Name    string  `bson:"name" json:"name"`
-	CodeId  string  `bson:"codeId" json:"codeId"`
-	Gallery Gallery `bson:"gallery" json:"gallery"`
+	ID         string     `bson:"_id" json:"id"`
+	Name       string     `bson:"name" json:"name"`
+	CodeId     string     `bson:"codeId" json:"codeId"`
+	Gallery    Gallery    `bson:"gallery" json:"gallery"`
+	Properties []Property `bson:"properties" json:"properties"`
+	Merchants  []Merchant `bson:"merchants" json:"merchants"`
 }
 
+type Property struct {
+	Name  string `bson:"name" json:"name"`
+	Value string `bson:"value" json:"value"`
+}
 type Gallery struct {
 	FeatureImage string   `json:"featureImage"`
 	Images       []string `json:"images"`
+}
+
+type Merchant struct {
+	ID           string  `bson:"_id" json:"id"`
+	ProductTitle string  `bson:"productTitle" json:"productTitle"`
+	Price        float64 `bson:"price" json:"price"`
+	ShippingFee  float64 `bson:"shippingFee" json:"shippingFee"`
+	Url          string  `bson:"url" json:"url"`
 }
 
 func GetOne(id string) Product {
