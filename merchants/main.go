@@ -27,6 +27,7 @@ func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/merchants", createNewUser).Methods("POST")
 	router.HandleFunc("/merchants/session", login).Methods("POST")
+	router.HandleFunc("/merchants/logo/{id}", logo).Methods("GET")
 
 	log.Error(http.ListenAndServe(":"+port, router))
 }
@@ -54,6 +55,21 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusUnauthorized)
 
+}
+
+func logo(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	id := params["id"]
+	m := repo.GetLogo(id)
+
+	response, err := json.Marshal(m)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(response)
 }
 
 func generateUserNameCookie(m repo.Merchant) *http.Cookie {

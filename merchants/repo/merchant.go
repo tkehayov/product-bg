@@ -24,6 +24,10 @@ type MerchantEntity struct {
 	Website  string             `json:"website"`
 }
 
+type MerchantLogo struct {
+	Logo string `bson:"logo" json:"logo"`
+}
+
 func Register(m Merchant) {
 	client, ctx := connect()
 	defer client.Disconnect(ctx)
@@ -36,6 +40,26 @@ func Register(m Merchant) {
 	if err != nil {
 		log.Error("Couldn't insert merchant: ", err.Error())
 	}
+}
+
+func GetLogo(id string) MerchantLogo {
+	var merchantLogo MerchantLogo
+	mId, errMerchant := primitive.ObjectIDFromHex(id)
+	if errMerchant != nil {
+		log.Error("error parsing merchant: ", errMerchant.Error())
+	}
+	client, ctx := connect()
+	defer client.Disconnect(ctx)
+	db := client.Database("merchants")
+	collection := db.Collection("merchants")
+
+	criteria := bson.D{{"_id", mId}}
+	err := collection.FindOne(context.TODO(), criteria).Decode(&merchantLogo)
+	if err != nil {
+		log.Error("Error finding merchant logo: ", err.Error())
+	}
+
+	return merchantLogo
 }
 
 func CredentialsMatch(m Merchant) bool {

@@ -26,7 +26,7 @@ type Gallery struct {
 func GetOne(id string) Product {
 	prodId, errProd := primitive.ObjectIDFromHex(id)
 	if errProd != nil {
-		log.Error("product id not found")
+		log.Error("error parsing id: ", errProd.Error())
 	}
 	client, ctx := connect()
 	defer client.Disconnect(ctx)
