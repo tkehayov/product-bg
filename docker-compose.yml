@@ -68,3 +68,14 @@ services:
       - 37018:27017
     volumes:
       - ./docker/volumes/merchants/db:/var/lib/db
+
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/volumes/frontend/build:/usr/share/nginx/html
+    ports:
+      - 80:8080
+      - 9090:9090
+      - 8083:8081
+    restart: always
