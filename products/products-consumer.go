@@ -31,7 +31,8 @@ type Merchant struct {
 
 func main() {
 	log.Info("PRODUCTS CONSUMER SERVICE STARTED")
-	lis, err1 := net.Listen("tcp", ":50051")
+	env := os.Getenv("CONSUMER_PORT")
+	lis, err1 := net.Listen("tcp", ":"+env)
 	if err1 != nil {
 		log.Fatalf("failed to listen: %v", err1)
 	}

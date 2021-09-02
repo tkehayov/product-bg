@@ -11,6 +11,7 @@ services:
       - ./docker/volumes/products/app:/go:ro
     command: ./main
     environment:
+      CONSUMER_PORT: 50051
       MONGO_URL: mongodb://db-products:27017/products
       PORT: 8080
     tty: true
@@ -34,7 +35,7 @@ services:
     ports:
       - 8082:8080
     environment:
-      PRODUCTS_PROVIDER_CONSUMER: products-consumer:50051
+      PRODUCTS_PROVIDER: products-consumer:50051
       PORT: 8080
     volumes:
       - ./docker/volumes/products-provider/app:/go:ro

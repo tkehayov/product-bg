@@ -32,6 +32,12 @@ func GetOne(w http.ResponseWriter, r *http.Request) {
 
 	product := repo.GetOne(id)
 
+	for i, merchant := range product.Merchants {
+		//TODO GET WITH GRPC
+		merchant.Logo = "https://p1.akcdn.net/partnerlogosmall/43499.jpg"
+		product.Merchants[i] = merchant
+
+	}
 	response, err := json.Marshal(product)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

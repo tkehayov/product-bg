@@ -49,7 +49,7 @@ func unmarshall(d []byte, productDto *products.ProductDto) {
 }
 
 func runClient(products products.ProductDto) {
-	url := os.Getenv("PRODUCTS_PROVIDER_CONSUMER")
+	url := os.Getenv("PRODUCTS_PROVIDER")
 	conn, err := grpc.Dial(url, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)

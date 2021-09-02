@@ -35,6 +35,7 @@ type Merchant struct {
 	Price        float64 `bson:"price" json:"price"`
 	ShippingFee  float64 `bson:"shippingFee" json:"shippingFee"`
 	Url          string  `bson:"url" json:"url"`
+	Logo         string  `json:"logo"`
 }
 
 func GetOne(id string) Product {
