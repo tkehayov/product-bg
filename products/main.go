@@ -1,12 +1,16 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
 	"net/http"
 	"os"
 	"product-bg/products/repo"
+	"product-bg/proto/merchants"
+	"time"
 )
 
 func init() {
@@ -33,10 +37,10 @@ func GetOne(w http.ResponseWriter, r *http.Request) {
 	product := repo.GetOne(id)
 
 	for i, merchant := range product.Merchants {
-		//TODO GET WITH GRPC
-		merchant.Logo = "https://p1.akcdn.net/partnerlogosmall/43499.jpg"
-		product.Merchants[i] = merchant
+		logo := getLogo(merchant.ID)
 
+		merchant.Logo = logo.Logo
+		product.Merchants[i] = merchant
 	}
 	response, err := json.Marshal(product)
 	if err != nil {
@@ -46,4 +50,26 @@ func GetOne(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(response)
+}
+
+func getLogo(Id string) *merchants.Logo {
+	env := os.Getenv("LOGO_PROVIDER")
+	conn, err := grpc.Dial(env, grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+
+	client := merchants.NewMerchantServiceClient(conn)
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	logo, err := client.SendMerchant(ctx, &merchants.Merchant{
+		Id: Id,
+	})
+	if err != nil {
+		log.Fatalf("could not send logo: %v", err)
+	}
+	return logo
 }

@@ -1,6 +1,6 @@
 syntax = "proto3";
 package provider;
-option go_package = "/provider";
+option go_package = "/products";
 
 message Message {
   string merchantId = 1;

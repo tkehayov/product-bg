@@ -1,0 +1,15 @@
+syntax = "proto3";
+package provider;
+option go_package = "/merchants";
+
+message Logo {
+  string logo = 1;
+}
+
+message Merchant {
+  string id = 1;
+}
+
+service MerchantService {
+  rpc sendMerchant(Merchant) returns (Logo) {}
+}

@@ -12,6 +12,7 @@ services:
     command: ./main
     environment:
       CONSUMER_PORT: 50051
+      LOGO_PROVIDER: merchant-consumer:50051
       MONGO_URL: mongodb://db-products:27017/products
       PORT: 8080
     tty: true
@@ -28,6 +29,20 @@ services:
     environment:
       MONGO_URL: mongodb://db-products:27017/products
       PROVIDER_PORT: 50051
+    tty: true
+
+  merchant-consumer:
+    image: golang:1.16-alpine3.14
+    depends_on:
+      - db-merchants
+    ports:
+      - 50052:50051
+    volumes:
+      - ./docker/volumes/merchants-consumer/app:/go:ro
+    command: ./merchant-consumer
+    environment:
+      MONGO_URL: mongodb://db-merchants:27017/merchants
+      CONSUMER_PORT: 50051
     tty: true
 
   products-provider:

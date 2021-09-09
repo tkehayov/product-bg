@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc"
 	"net"
 	"os"
-	"product-bg/proto/provider"
+	"product-bg/proto/products"
 	"time"
 )
 
@@ -37,25 +37,26 @@ func main() {
 		log.Fatalf("failed to listen: %v", err1)
 	}
 	s := grpc.NewServer()
-	provider.RegisterProductServiceServer(s, &server{})
+	products.RegisterProductServiceServer(s, &server{})
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
 }
 
 type server struct {
-	provider.UnimplementedProductServiceServer
+	products.UnimplementedProductServiceServer
 }
 
-func (s *server) SendProducts(ctx context.Context, in *provider.Message) (*provider.Message, error) {
+func (s *server) SendProducts(ctx context.Context, in *products.Message) (*products.Message, error) {
 	UpdateProduct(in)
 
-	return &provider.Message{
+	return &products.Message{
 		MerchantId: in.MerchantId,
 	}, nil
 }
 
-func UpdateProduct(m *provider.Message) {
+//TODO move into repository
+func UpdateProduct(m *products.Message) {
 	client, ctx := connect()
 	defer client.Disconnect(ctx)
 
@@ -87,7 +88,7 @@ func UpdateProduct(m *provider.Message) {
 	}
 }
 
-func updateMerchant(collection *mongo.Collection, ctx context.Context, product *provider.Product, merchant Merchant) (*mongo.UpdateResult, error) {
+func updateMerchant(collection *mongo.Collection, ctx context.Context, product *products.Product, merchant Merchant) (*mongo.UpdateResult, error) {
 	opts := options.Update().SetUpsert(true)
 	res, err := collection.UpdateOne(ctx, bson.M{"codeId": product.CodeId, "merchants._id": merchant.ID}, bson.D{
 		{"$set",
@@ -98,7 +99,7 @@ func updateMerchant(collection *mongo.Collection, ctx context.Context, product *
 	return res, err
 }
 
-func addMerchant(collection *mongo.Collection, ctx context.Context, product *provider.Product, merchant Merchant) (*mongo.UpdateResult, error) {
+func addMerchant(collection *mongo.Collection, ctx context.Context, product *products.Product, merchant Merchant) (*mongo.UpdateResult, error) {
 	resultNewMerchant, err := collection.UpdateOne(ctx, bson.M{"codeId": product.CodeId}, bson.D{
 		{"$push", bson.D{{"merchants", merchant}}},
 	})

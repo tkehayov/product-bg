@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"os"
 	"product-bg/products-provider/products"
-	"product-bg/proto/provider"
+	provider "product-bg/proto/products"
 	"time"
 )
 

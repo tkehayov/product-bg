@@ -75,6 +75,7 @@ func CredentialsMatch(m Merchant) bool {
 
 	return err == nil
 }
+
 func connect() (*mongo.Client, context.Context) {
 	env := os.Getenv("MONGO_URL")
 

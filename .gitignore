@@ -2,4 +2,4 @@
 .docker_build
 docker
 go.sum
-#*.pb.go
+*.pb.go
