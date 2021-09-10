@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc"
 	"net/http"
 	"os"
-	"product-bg/products/repo"
+	"product-bg/products/dataservice"
 	"product-bg/proto/merchants"
 	"time"
 )
@@ -34,7 +34,7 @@ func GetOne(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id := params["id"]
 
-	product := repo.GetOne(id)
+	product := dataservice.GetOne(id)
 
 	for i, merchant := range product.Merchants {
 		logo := getLogo(merchant.ID)
