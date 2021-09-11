@@ -1,14 +1,11 @@
-package database
+package repo
 
 import (
 	"context"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"os"
-	"time"
+	"product-bg/merchants/internal/database"
 )
 
 type Merchant struct {
@@ -29,7 +26,7 @@ type MerchantLogo struct {
 }
 
 func Register(m Merchant) {
-	client, ctx := connect()
+	client, ctx := database.Connect()
 	defer client.Disconnect(ctx)
 
 	db := client.Database("merchants")
@@ -48,7 +45,7 @@ func GetLogo(id string) MerchantLogo {
 	if errMerchant != nil {
 		log.Error("error parsing merchant: ", errMerchant.Error())
 	}
-	client, ctx := connect()
+	client, ctx := database.Connect()
 	defer client.Disconnect(ctx)
 	db := client.Database("merchants")
 	collection := db.Collection("merchants")
@@ -63,7 +60,7 @@ func GetLogo(id string) MerchantLogo {
 }
 
 func CredentialsMatch(m Merchant) bool {
-	client, ctx := connect()
+	client, ctx := database.Connect()
 	defer client.Disconnect(ctx)
 
 	db := client.Database("merchants")
@@ -74,18 +71,4 @@ func CredentialsMatch(m Merchant) bool {
 	err := collection.FindOne(context.TODO(), criteria).Decode(&result)
 
 	return err == nil
-}
-
-func connect() (*mongo.Client, context.Context) {
-	env := os.Getenv("MONGO_URL")
-
-	client, err := mongo.NewClient(options.Client().ApplyURI(env))
-	if err != nil {
-		log.Fatal("error Connection", err)
-	}
-
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	err = client.Connect(ctx)
-
-	return client, ctx
 }

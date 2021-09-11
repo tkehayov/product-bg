@@ -6,7 +6,7 @@ import (
 	"google.golang.org/grpc"
 	"net"
 	"os"
-	"product-bg/products/internal/database"
+	"product-bg/products/internal/repo"
 	"product-bg/proto/products"
 )
 
@@ -37,7 +37,7 @@ type server struct {
 }
 
 func (s *server) SendProducts(ctx context.Context, in *products.Message) (*products.Message, error) {
-	database.UpdateProduct(in)
+	repo.UpdateProduct(in)
 
 	return &products.Message{
 		MerchantId: in.MerchantId,

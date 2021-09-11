@@ -1,4 +1,4 @@
-package database
+package repo
 
 import (
 	"context"
@@ -7,9 +7,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"os"
+	"product-bg/products/internal/database"
 	"product-bg/proto/products"
-	"time"
 )
 
 type Product struct {
@@ -44,7 +43,7 @@ func GetOne(id string) Product {
 	if errProd != nil {
 		log.Error("error parsing id: ", errProd.Error())
 	}
-	client, ctx := connect()
+	client, ctx := database.Connect()
 	defer client.Disconnect(ctx)
 
 	db := client.Database("products")
@@ -62,7 +61,7 @@ func GetOne(id string) Product {
 }
 
 func UpdateProduct(message *products.Message) {
-	client, ctx := connect()
+	client, ctx := database.Connect()
 	defer client.Disconnect(ctx)
 
 	db := client.Database("products")
@@ -110,19 +109,4 @@ func addMerchant(collection *mongo.Collection, ctx context.Context, product *pro
 	})
 
 	return resultNewMerchant, err
-}
-
-func connect() (*mongo.Client, context.Context) {
-	env := os.Getenv("MONGO_URL")
-	client, err := mongo.NewClient(options.Client().ApplyURI(env))
-	if err != nil {
-		log.Error("Cannot connect to db", err)
-	}
-
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	errConn := client.Connect(ctx)
-	if errConn != nil {
-		log.Error("Error connection: ", errConn)
-	}
-	return client, ctx
 }
