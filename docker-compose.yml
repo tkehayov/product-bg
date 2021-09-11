@@ -28,7 +28,7 @@ services:
     command: ./products-consumer
     environment:
       MONGO_URL: mongodb://db-products:27017/products
-      PROVIDER_PORT: 50051
+      CONSUMER_PORT: 50051
     tty: true
 
   merchant-consumer:
