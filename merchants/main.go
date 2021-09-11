@@ -9,7 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"product-bg/merchants/repo"
+	"product-bg/merchants/dataservice"
 )
 
 func init() {
@@ -33,19 +33,19 @@ func main() {
 }
 
 func createNewUser(w http.ResponseWriter, r *http.Request) {
-	merchant := repo.Merchant{}
+	merchant := dataservice.Merchant{}
 	body, _ := ioutil.ReadAll(r.Body)
 	unmarshall(body, &merchant)
 
-	repo.Register(merchant)
+	dataservice.Register(merchant)
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
-	merchant := repo.Merchant{}
+	merchant := dataservice.Merchant{}
 	body, _ := ioutil.ReadAll(r.Body)
 	unmarshall(body, &merchant)
 
-	match := repo.CredentialsMatch(merchant)
+	match := dataservice.CredentialsMatch(merchant)
 	if match {
 		userCookie := generateUserCookie(merchant)
 		usernameCookie := generateUserNameCookie(merchant)
@@ -60,7 +60,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 func logo(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id := params["id"]
-	m := repo.GetLogo(id)
+	m := dataservice.GetLogo(id)
 
 	response, err := json.Marshal(m)
 	if err != nil {
@@ -72,7 +72,7 @@ func logo(w http.ResponseWriter, r *http.Request) {
 	w.Write(response)
 }
 
-func generateUserNameCookie(m repo.Merchant) *http.Cookie {
+func generateUserNameCookie(m dataservice.Merchant) *http.Cookie {
 	return &http.Cookie{
 		Name:   "username",
 		Value:  m.Username,
@@ -80,7 +80,7 @@ func generateUserNameCookie(m repo.Merchant) *http.Cookie {
 	}
 }
 
-func generateUserCookie(m repo.Merchant) *http.Cookie {
+func generateUserCookie(m dataservice.Merchant) *http.Cookie {
 	userpass := m.Username + m.Password
 	h := sha256.New()
 	h.Write([]byte(userpass))
@@ -93,7 +93,7 @@ func generateUserCookie(m repo.Merchant) *http.Cookie {
 	}
 }
 
-func unmarshall(d []byte, merchant *repo.Merchant) {
+func unmarshall(d []byte, merchant *dataservice.Merchant) {
 	err := json.Unmarshal(d, &merchant)
 	if err != nil {
 		log.Error("error unmarshalling: ", err.Error())

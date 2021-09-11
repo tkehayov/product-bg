@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc"
 	"net"
 	"os"
-	"product-bg/merchants/repo"
+	"product-bg/merchants/dataservice"
 	"product-bg/proto/merchants"
 	"time"
 )
@@ -43,7 +43,7 @@ func (s *server) SendMerchant(ctx context.Context, merchant *merchants.Merchant)
 
 func getLogo(id string) string {
 	merchantID, errMerchantID := primitive.ObjectIDFromHex(id)
-	var logo repo.MerchantLogo
+	var logo dataservice.MerchantLogo
 
 	client, ctx := connect()
 	defer client.Disconnect(ctx)
