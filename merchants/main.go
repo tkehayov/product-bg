@@ -9,7 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"product-bg/merchants/dataservice"
+	"product-bg/merchants/internal/database"
 )
 
 func init() {
@@ -33,19 +33,19 @@ func main() {
 }
 
 func createNewUser(w http.ResponseWriter, r *http.Request) {
-	merchant := dataservice.Merchant{}
+	merchant := database.Merchant{}
 	body, _ := ioutil.ReadAll(r.Body)
 	unmarshall(body, &merchant)
 
-	dataservice.Register(merchant)
+	database.Register(merchant)
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
-	merchant := dataservice.Merchant{}
+	merchant := database.Merchant{}
 	body, _ := ioutil.ReadAll(r.Body)
 	unmarshall(body, &merchant)
 
-	match := dataservice.CredentialsMatch(merchant)
+	match := database.CredentialsMatch(merchant)
 	if match {
 		userCookie := generateUserCookie(merchant)
 		usernameCookie := generateUserNameCookie(merchant)
@@ -60,7 +60,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 func logo(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id := params["id"]
-	m := dataservice.GetLogo(id)
+	m := database.GetLogo(id)
 
 	response, err := json.Marshal(m)
 	if err != nil {
@@ -72,7 +72,7 @@ func logo(w http.ResponseWriter, r *http.Request) {
 	w.Write(response)
 }
 
-func generateUserNameCookie(m dataservice.Merchant) *http.Cookie {
+func generateUserNameCookie(m database.Merchant) *http.Cookie {
 	return &http.Cookie{
 		Name:   "username",
 		Value:  m.Username,
@@ -80,7 +80,7 @@ func generateUserNameCookie(m dataservice.Merchant) *http.Cookie {
 	}
 }
 
-func generateUserCookie(m dataservice.Merchant) *http.Cookie {
+func generateUserCookie(m database.Merchant) *http.Cookie {
 	userpass := m.Username + m.Password
 	h := sha256.New()
 	h.Write([]byte(userpass))
@@ -93,7 +93,7 @@ func generateUserCookie(m dataservice.Merchant) *http.Cookie {
 	}
 }
 
-func unmarshall(d []byte, merchant *dataservice.Merchant) {
+func unmarshall(d []byte, merchant *database.Merchant) {
 	err := json.Unmarshal(d, &merchant)
 	if err != nil {
 		log.Error("error unmarshalling: ", err.Error())
