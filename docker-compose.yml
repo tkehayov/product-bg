@@ -103,3 +103,16 @@ services:
       - 9090:9090
       - 8083:8081
     restart: always
+
+  ftp:
+    container_name: ftp
+    image: bogem/ftp
+    ports:
+      - "21:21"
+    volumes:
+      - ./docker/volumes/ftp:/home/vsftpd
+    environment:
+      FTP_USER: username
+      FTP_PASS: password
+      PASV_ADDRESS: 192.168.1.123
+    restart: always
