@@ -87,6 +87,10 @@ services:
       - ./docker/volumes/ftp-client/app:/go:ro
     command: ./main
     environment:
+      FTP: "ftp:21"
+      FTP_USERNAME: username
+      FTP_PASSWORD: password
+      PRODUCT_PATH: "/products"
       PORT: 8080
     tty: true
 
@@ -126,7 +130,7 @@ services:
       - "21:21"
       - "21100-21110:21100-21110"
     volumes:
-      - ./docker/volumes/ftp:/home/vsftpd/username
+      - ./docker/volumes/ftp/products:/home/vsftpd/username/products
     environment:
       FTP_USER: username
       FTP_PASS: password
