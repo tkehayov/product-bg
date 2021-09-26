@@ -56,7 +56,6 @@ func product(w http.ResponseWriter, r *http.Request) {
 	if err := ftpConnection.Quit(); err != nil {
 		log.Fatal("error quit: ", err)
 	}
-
 }
 
 func getFile(c *ftp.ServerConn, filename string) *ftp.Response {
