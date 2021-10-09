@@ -7,27 +7,28 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"product-bg/products/internal/database"
-	"product-bg/products/internal/dto"
 	"product-bg/products/internal/entities"
 )
 
-type ProductCategoryRepositoryInterface interface {
-	//GetFilters(category string) entities.Category
-}
-type productCategoryRepostiory struct{}
-
-func NewProductCategoryRepostiory() ProductCategoryRepositoryInterface {
-	return &productCategoryRepostiory{}
+type ProductCategoryFilterRepositoryInterface interface {
+	GetFilters(category string) entities.ProductCategoryFilter
 }
 
-func GetFilters(category string) dto.Category {
+type productCategoryFilter struct{}
+
+func NewProductCategoryFilterRepository() ProductCategoryFilterRepositoryInterface {
+	return &productCategoryFilter{}
+}
+
+func (productCategory *productCategoryFilter) GetFilters(category string) entities.ProductCategoryFilter {
+	log.Error("asd")
 	client, ctx := database.Connect()
 	defer client.Disconnect(ctx)
 
 	db := client.Database("products")
 	collection := db.Collection("products")
 
-	var result dto.Category
+	var result entities.ProductCategoryFilter
 
 	unwindStage := bson.D{{"$unwind", bson.D{{"path", "$properties"}}}}
 	groupStage := bson.D{{"$group", bson.D{{"_id", "$properties.name"}, {"values", bson.D{{"$addToSet", "$properties.value"}}}}}}
@@ -43,7 +44,7 @@ func GetFilters(category string) dto.Category {
 		log.Error("Error aggregator: ", errAggregator.Error())
 	}
 
-	if errAggregator = cursorAggregator.All(ctx, &result.Filter); errAggregator != nil {
+	if errAggregator = cursorAggregator.All(ctx, &result.ProductFilter); errAggregator != nil {
 		log.Error("Error cursor aggregator: ", errAggregator.Error())
 	}
 
