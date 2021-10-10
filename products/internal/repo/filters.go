@@ -21,7 +21,6 @@ func NewProductCategoryFilterRepository() ProductCategoryFilterRepositoryInterfa
 }
 
 func (productCategory *productCategoryFilter) GetFilters(category string) entities.ProductCategoryFilter {
-	log.Error("asd")
 	client, ctx := database.Connect()
 	defer client.Disconnect(ctx)
 
