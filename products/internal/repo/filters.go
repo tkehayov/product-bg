@@ -2,7 +2,6 @@ package repo
 
 import (
 	"context"
-	"fmt"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -30,14 +29,13 @@ func (productCategory *productCategoryFilter) GetFilters(category string) entiti
 	var result entities.ProductCategoryFilter
 
 	unwindStage := bson.D{{"$unwind", bson.D{{"path", "$properties"}}}}
-	groupStage := bson.D{{"$group", bson.D{{"_id", "$properties.name"}, {"values", bson.D{{"$addToSet", "$properties.value"}}}}}}
 
 	filters := getCategoryFilters(category)
-
-	matchStage := bson.D{{"$match", bson.D{{"$or", filters}}}}
+	matchStage := bson.D{{"$match", bson.D{{"properties.name", bson.D{{"$in", filters}}}, {"category", "laptops"}}}}
+	groupStage := bson.D{{"$group", bson.D{{"_id", "$properties.name"}, {"values", bson.D{{"$addToSet", "$properties.value"}}}}}}
 	projectStage := bson.D{{"$project", bson.D{{"values", 1}, {"name", "$_id"}, {"_id", 0}}}}
 
-	cursorAggregator, errAggregator := collection.Aggregate(context.TODO(), mongo.Pipeline{unwindStage, groupStage, matchStage, projectStage})
+	cursorAggregator, errAggregator := collection.Aggregate(context.TODO(), mongo.Pipeline{unwindStage, matchStage, groupStage, projectStage})
 
 	if errAggregator != nil {
 		log.Error("Error aggregator: ", errAggregator.Error())
@@ -50,9 +48,9 @@ func (productCategory *productCategoryFilter) GetFilters(category string) entiti
 	return result
 }
 
-func getCategoryFilters(category string) []interface{} {
+func getCategoryFilters(category string) []string {
 	var categoryEntity entities.Category
-	var result []interface{}
+	var result []string
 
 	client, ctx := database.Connect()
 	defer client.Disconnect(ctx)
@@ -66,9 +64,9 @@ func getCategoryFilters(category string) []interface{} {
 	}
 
 	for _, filter := range categoryEntity.Filter {
-		categoryFormated := fmt.Sprintf("^%s$", filter.Value)
-		filter1 := bson.D{{"_id", bson.D{{"$regex", categoryFormated}, {"$options", "i"}}}}
-		result = append(result, filter1)
+		//categoryFormated := fmt.Sprintf("%s", filter.Value)
+		//filter1 := bson.D{{"_id", bson.D{{"$regex", categoryFormated}, {"$options", "i"}}}}
+		result = append(result, filter.Value)
 	}
 
 	return result

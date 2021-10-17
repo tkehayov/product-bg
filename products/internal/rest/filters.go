@@ -18,8 +18,8 @@ func (Filter) GetAll(w http.ResponseWriter, r *http.Request) {
 	category := params["category"]
 	repository := repo.NewProductCategoryFilterRepository()
 	categoryEntity := services.NewCategoryService(repository).GetCategory(category)
-	entities := dto.ParseFromEntities(categoryEntity)
-	response, err := json.Marshal(entities)
+	dto := dto.ParseFromEntities(categoryEntity)
+	response, err := json.Marshal(dto)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
