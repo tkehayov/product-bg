@@ -10,7 +10,7 @@ import (
 )
 
 type ProductCategoryFilterRepositoryInterface interface {
-	GetFilters(category string) entities.ProductCategoryFilter
+	GetFilters(category string) entities.CategoryProductFilter
 }
 
 type productCategoryFilter struct{}
@@ -19,14 +19,14 @@ func NewProductCategoryFilterRepository() ProductCategoryFilterRepositoryInterfa
 	return &productCategoryFilter{}
 }
 
-func (productCategory *productCategoryFilter) GetFilters(category string) entities.ProductCategoryFilter {
+func (productCategory *productCategoryFilter) GetFilters(category string) entities.CategoryProductFilter {
 	client, ctx := database.Connect()
 	defer client.Disconnect(ctx)
 
 	db := client.Database("products")
 	collection := db.Collection("products")
 
-	var result entities.ProductCategoryFilter
+	var result entities.CategoryProductFilter
 
 	unwindStage := bson.D{{"$unwind", bson.D{{"path", "$properties"}}}}
 
@@ -64,8 +64,6 @@ func getCategoryFilters(category string) []string {
 	}
 
 	for _, filter := range categoryEntity.Filter {
-		//categoryFormated := fmt.Sprintf("%s", filter.Value)
-		//filter1 := bson.D{{"_id", bson.D{{"$regex", categoryFormated}, {"$options", "i"}}}}
 		result = append(result, filter.Value)
 	}
 

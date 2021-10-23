@@ -21,7 +21,10 @@ func main() {
 	port := os.Getenv("PORT")
 	router := mux.NewRouter()
 	router.HandleFunc("/products/{id}", rest.Product{}.GetOne)
-	router.HandleFunc("/filters/categories/{category}", rest.Filter{}.GetAll)
+	router.HandleFunc("/filters/categories/{category}", rest.FilterCategory{}.GetAll)
+	//TODO implement
+	router.HandleFunc("/filters/products/{category}", rest.FilterProduct{}.Get)
+	router.HandleFunc("/filters/products/{category}", rest.FilterProduct{}.Get).Queries("filter", "{filter}")
 
 	log.Error(http.ListenAndServe(":"+port, router))
 }

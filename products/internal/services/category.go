@@ -5,20 +5,20 @@ import (
 	"product-bg/products/internal/repo"
 )
 
-type ProductCategoryFilterService interface {
-	GetCategory(category string) entities.ProductCategoryFilter
+type CategoryService interface {
+	GetOne(category string) entities.Category
 }
 
-type productCategoryFilter struct {
-	ProductCategoryFilterRepository repo.ProductCategoryFilterRepositoryInterface
+type category struct {
+	CategoryRepository repo.CategoryRepositoryInterface
 }
 
 func NewCategoryService(
-	productCategoryFilterRepository repo.ProductCategoryFilterRepositoryInterface,
-) ProductCategoryFilterService {
-	return &productCategoryFilter{ProductCategoryFilterRepository: productCategoryFilterRepository}
+	productCategoryFilterRepository repo.CategoryRepositoryInterface,
+) CategoryService {
+	return &category{CategoryRepository: productCategoryFilterRepository}
 }
 
-func (prodCatFilter productCategoryFilter) GetCategory(category string) entities.ProductCategoryFilter {
-	return prodCatFilter.ProductCategoryFilterRepository.GetFilters(category)
+func (category category) GetOne(id string) entities.Category {
+	return category.CategoryRepository.GetOne(id)
 }
