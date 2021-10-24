@@ -24,7 +24,5 @@ func main() {
 	router.HandleFunc("/filters/categories/{category}", rest.FilterCategory{}.GetAll)
 	//TODO implement
 	router.HandleFunc("/filters/products/{category}", rest.FilterProduct{}.Get)
-	router.HandleFunc("/filters/products/{category}", rest.FilterProduct{}.Get).Queries("filter", "{filter}")
-
 	log.Error(http.ListenAndServe(":"+port, router))
 }

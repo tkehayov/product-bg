@@ -16,12 +16,12 @@ type FilterProduct struct {
 
 func (FilterProduct) Get(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
+	//TODO YOU ARE HERE
 
 	category := params["category"]
-	filter := r.FormValue("filter")
-	DecodeBase64(filter)
+	filters := r.URL.Query()
 	repository := repo.NewProductFilterRepository()
-	productEntity := services.NewProductFilterService(repository).GetProducts(category, filter)
+	productEntity := services.NewProductFilterService(repository).GetProducts(category, filters)
 
 	dto := dto.ParseProductFilterFromEntities(productEntity)
 	response, err := json.Marshal(dto)

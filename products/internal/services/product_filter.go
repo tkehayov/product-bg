@@ -7,7 +7,7 @@ import (
 )
 
 type ProductFilterService interface {
-	GetProducts(category string, filter string) entities.ProductFilter
+	GetProducts(category string, filter map[string][]string) entities.ProductFilter
 }
 
 type productFilter struct {
@@ -19,9 +19,7 @@ func NewProductFilterService(productFilterRepositoryInterface repo.ProductFilter
 }
 
 //TODO implement
-func (p productFilter) GetProducts(category string, filter string) entities.ProductFilter {
-	log.Error(category)
-	log.Error(filter)
-	log.Error("implement me")
+func (p productFilter) GetProducts(category string, filter map[string][]string) entities.ProductFilter {
+	log.Error("filterss: ", filter)
 	return entities.ProductFilter{}
 }
