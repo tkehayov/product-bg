@@ -18,6 +18,30 @@ func NewProductFilterRepository() ProductFilterRepositoryInterface {
 	return &productFilter{}
 }
 
+// GetFilteredProducts Filtering products by criteria.
+// Example:
+//
+// {$and: [
+//        {$or: [
+//                {
+//                    "properties.name": "Памет",
+//                    "properties.value": "8GB"
+//                }
+//            ]
+//        },
+//        {$or: [
+//                {
+//                    "properties.name": "Памет",
+//                    "properties.value": "Intel Core i5"
+//                }
+//            ]
+//        },
+//        {
+//            "category": "laptops",
+//            "brand": "Acer",
+//        },
+//    ]
+//	}
 func (p productFilter) GetFilteredProducts(category string, filters map[string][]string) []entities.ProductFilter {
 	client, ctx := database.Connect()
 	defer client.Disconnect(ctx)

@@ -19,6 +19,46 @@ func NewProductCategoryFilterRepository() ProductCategoryFilterRepositoryInterfa
 	return &productCategoryFilter{}
 }
 
+// GetFilters Filtering categories by criteria.
+// Example:
+// db.products.find([
+//    {
+//            $unwind: {
+//                path: "$properties"
+//        }
+//    },
+//    {
+//            $group: {
+//              _id: "$properties.name",
+//              values: {$addToSet: "$properties.value"
+//            }
+//        }
+//    },
+//    {
+//            $match: {
+//
+//
+//                $or: [
+//                {
+//                    "_id": {$regex : '^процесор$', '$options' : 'i'
+//                    }
+//                },
+//                {
+//                    "_id": {$regex : '^памет$', '$options' : 'i'
+//                    }
+//                }
+//            ]
+//        }
+//    },
+//    {
+//            $project: {
+//            "category": 1,
+//            "values": 1,
+//            "name": "$_id",
+//              _id: 0
+//        }
+//    }
+// ])
 func (productCategory *productCategoryFilter) GetFilters(category string) entities.CategoryProductFilter {
 	client, ctx := database.Connect()
 	defer client.Disconnect(ctx)
