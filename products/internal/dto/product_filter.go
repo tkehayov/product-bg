@@ -10,7 +10,6 @@ type Product struct {
 }
 
 func ParseProductFilterFromEntities(filters []entities.ProductFilter) []Product {
-	//TODO implement
 	var products []Product
 	for _, productFilter := range filters {
 		product := Product{

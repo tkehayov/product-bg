@@ -16,15 +16,19 @@ type FilterProduct struct {
 
 func (FilterProduct) Get(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	//TODO YOU ARE HERE
 
 	category := params["category"]
 	filters := r.URL.Query()
 	repository := repo.NewProductFilterRepository()
 	productEntity := services.NewProductFilterService(repository).GetProducts(category, filters)
 
-	dto := dto.ParseProductFilterFromEntities(productEntity)
-	response, err := json.Marshal(dto)
+	products := dto.ParseProductFilterFromEntities(productEntity)
+
+	if products == nil {
+		products = []dto.Product{}
+	}
+
+	response, err := json.Marshal(products)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
