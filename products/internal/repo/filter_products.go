@@ -49,9 +49,7 @@ func (p productFilter) GetFilteredProducts(category string, filters map[string][
 	db := client.Database("products")
 	collection := db.Collection("products")
 
-	params := bson.A{}
-
-	matchStage := filterDocument(category, filters, params)
+	matchStage := filterDocument(category, filters)
 
 	cur, err := collection.Find(context.TODO(), matchStage)
 
@@ -65,6 +63,9 @@ func (p productFilter) GetFilteredProducts(category string, filters map[string][
 		// create a value into which the single document can be decoded
 		var product entities.ProductFilter
 		err := cur.Decode(&product)
+		minPrice := getMinMerchantPrice(product.Merchants)
+		product.MinPrice = minPrice
+
 		if err != nil {
 			log.Error("Error decoding products: ", err)
 		}
@@ -75,14 +76,27 @@ func (p productFilter) GetFilteredProducts(category string, filters map[string][
 	return products
 }
 
-func filterDocument(category string, filters map[string][]string, params bson.A) bson.D {
-	categoryStage := bson.A{bson.D{{"category", category}}}
+func filterDocument(category string, filters map[string][]string) bson.D {
+	params := bson.A{}
+	var brand string
+	var categoryStage bson.A
 	var orParams bson.A
+
+	categoryStage = bson.A{bson.D{{"category", category}}}
+	//TODO delete after moving product.brand into properties.name. Example:
+	//  {product.brand:"Acer"} ,should look like {product.properties.name:"brand",product.properties.value:"Acer"}
+	brandParam := filters["brand"]
+	if brandParam != nil {
+		brand = brandParam[0]
+		delete(filters, "brand")
+
+		categoryStage = bson.A{bson.D{{"category", category}, {"brand", brand}}}
+	}
 
 	for key, values := range filters {
 		for _, value := range values {
-			processors := bson.D{{"properties.name", key}, {"properties.value", value}}
-			params = append(params, processors)
+			properties := bson.D{{"properties.name", key}, {"properties.value", value}}
+			params = append(params, properties)
 		}
 		orParams = append(orParams, bson.D{{"$or", params}})
 		params = bson.A{}
@@ -94,4 +108,23 @@ func filterDocument(category string, filters map[string][]string, params bson.A)
 	}
 
 	return matchStage
+}
+
+func getMinMerchantPrice(merchants []entities.Merchant) float64 {
+	var prices []float64
+	for _, merchant := range merchants {
+		prices = append(prices, merchant.Price)
+	}
+	return min(prices)
+}
+
+func min(array []float64) float64 {
+	var min = array[0]
+	for _, value := range array {
+		if min > value {
+			min = value
+		}
+	}
+
+	return min
 }

@@ -1,10 +1,15 @@
 package entities
 
 type ProductFilter struct {
-	Id      string  `bson:"_id"`
-	Name    string  `bson:"name"`
-	Gallery Gallery `bson:"gallery"`
-	//MinPrice     string `bson:"minPrice"`
+	Id        string     `bson:"_id"`
+	Name      string     `bson:"name"`
+	Gallery   Gallery    `bson:"gallery"`
+	Merchants []Merchant `bson:"merchants"`
+	MinPrice  float64    `bson:"minPrice"`
+}
+
+type Merchant struct {
+	Price float64 `bson:"price"`
 }
 
 type Gallery struct {

@@ -3,10 +3,10 @@ package dto
 import "product-bg/products/internal/entities"
 
 type Product struct {
-	Id           string `json:"id"`
-	Name         string `json:"name"`
-	FeatureImage string `json:"featureImage"`
-	MinPrice     string `json:"minPrice"`
+	Id           string  `json:"id"`
+	Name         string  `json:"name"`
+	FeatureImage string  `json:"featureImage"`
+	MinPrice     float64 `json:"minPrice"`
 }
 
 func ParseProductFilterFromEntities(filters []entities.ProductFilter) []Product {
@@ -16,7 +16,7 @@ func ParseProductFilterFromEntities(filters []entities.ProductFilter) []Product 
 			Id:           productFilter.Id,
 			Name:         productFilter.Name,
 			FeatureImage: productFilter.Gallery.FeatureImage,
-			MinPrice:     "todo",
+			MinPrice:     productFilter.MinPrice,
 		}
 		products = append(products, product)
 	}
