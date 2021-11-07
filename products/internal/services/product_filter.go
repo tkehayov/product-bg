@@ -1,13 +1,12 @@
 package services
 
 import (
-	log "github.com/sirupsen/logrus"
 	"product-bg/products/internal/entities"
 	"product-bg/products/internal/repo"
 )
 
 type ProductFilterService interface {
-	GetProducts(category string, filter map[string][]string) entities.ProductFilter
+	GetProducts(category string, filter map[string][]string) []entities.ProductFilter
 }
 
 type productFilter struct {
@@ -18,8 +17,26 @@ func NewProductFilterService(productFilterRepositoryInterface repo.ProductFilter
 	return &productFilter{ProductFilterRepository: productFilterRepositoryInterface}
 }
 
-//TODO implement
-func (p productFilter) GetProducts(category string, filter map[string][]string) entities.ProductFilter {
-	log.Error("filterss: ", filter)
-	return entities.ProductFilter{}
+func (productFilters productFilter) GetProducts(category string, filter map[string][]string) []entities.ProductFilter {
+
+	categoryRepository := repo.NewCategoryRepository()
+	categoryService := NewCategoryService(categoryRepository)
+	categoryEntity := categoryService.GetOne(category)
+
+	mapFilters := mapFilters(categoryEntity, filter)
+	return productFilters.ProductFilterRepository.GetFilteredProducts(category, mapFilters)
+}
+
+func mapFilters(category entities.Category, filters map[string][]string) map[string][]string {
+	results := make(map[string][]string)
+
+	for name, value := range filters {
+		for _, categoryFilter := range category.Filter {
+			if name == categoryFilter.Name {
+				results[categoryFilter.Value] = value
+			}
+		}
+	}
+
+	return results
 }

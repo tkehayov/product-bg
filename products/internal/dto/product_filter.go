@@ -9,9 +9,18 @@ type Product struct {
 	MinPrice     string `json:"minPrice"`
 }
 
-func ParseProductFilterFromEntities(data entities.ProductFilter) []Product {
+func ParseProductFilterFromEntities(filters []entities.ProductFilter) []Product {
 	//TODO implement
-
-	return []Product{}
+	var products []Product
+	for _, productFilter := range filters {
+		product := Product{
+			Id:           productFilter.Id,
+			Name:         productFilter.Name,
+			FeatureImage: productFilter.Gallery.FeatureImage,
+			MinPrice:     "todo",
+		}
+		products = append(products, product)
+	}
+	return products
 
 }
