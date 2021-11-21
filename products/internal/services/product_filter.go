@@ -34,8 +34,15 @@ func mapFilters(category entities.Category, filters map[string][]string) map[str
 		for _, categoryFilter := range category.Filter {
 			if name == categoryFilter.Name {
 				results[categoryFilter.Value] = value
+				break
+			}
+
+			//TODO dirty hack - should find another solution
+			if name == "after" {
+				results["after"] = value
 			}
 		}
+		//results[name] = value
 	}
 
 	return results

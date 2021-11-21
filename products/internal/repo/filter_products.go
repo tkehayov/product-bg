@@ -4,6 +4,8 @@ import (
 	"context"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"product-bg/products/internal/database"
 	"product-bg/products/internal/entities"
 )
@@ -21,27 +23,28 @@ func NewProductFilterRepository() ProductFilterRepositoryInterface {
 // GetFilteredProducts Filtering products by criteria.
 // Example:
 //
-// {$and: [
-//        {$or: [
-//                {
-//                    "properties.name": "Памет",
-//                    "properties.value": "8GB"
-//                }
-//            ]
-//        },
-//        {$or: [
-//                {
-//                    "properties.name": "Памет",
-//                    "properties.value": "Intel Core i5"
-//                }
-//            ]
-//        },
-//        {
-//            "category": "laptops",
-//            "brand": "Acer",
-//        },
-//    ]
-//	}
+//{$and: [
+//		  {"_id":{$gt:ObjectId("5ef8b9eb5512aa0006c60f12")}},
+//       {$or: [
+//               {
+//                   "properties.name": "Памет",
+//                   "properties.value": "8GB"
+//               }
+//           ]
+//       },
+//       {$or: [
+//               {
+//                   "properties.name": "Памет",
+//                   "properties.value": "Intel Core i5"
+//               }
+//           ]
+//       },
+//       {
+//           "category": "laptops",
+//           "brand": "Acer",
+//       },
+//   ]
+//	}.limit(10)
 func (p productFilter) GetFilteredProducts(category string, filters map[string][]string) []entities.ProductFilter {
 	client, ctx := database.Connect()
 	defer client.Disconnect(ctx)
@@ -51,7 +54,10 @@ func (p productFilter) GetFilteredProducts(category string, filters map[string][
 
 	matchStage := filterDocument(category, filters)
 
-	cur, err := collection.Find(context.TODO(), matchStage)
+	options := options.Find()
+	options.SetLimit(10)
+
+	cur, err := collection.Find(context.TODO(), matchStage, options)
 
 	var products []entities.ProductFilter
 	if err != nil {
@@ -78,36 +84,59 @@ func (p productFilter) GetFilteredProducts(category string, filters map[string][
 
 func filterDocument(category string, filters map[string][]string) bson.D {
 	params := bson.A{}
-	var brand string
-	var categoryStage bson.A
-	var orParams bson.A
+	var andStage bson.A
+	var orStage bson.A
 
-	categoryStage = bson.A{bson.D{{"category", category}}}
-	//TODO delete after moving product.brand into properties.name. Example:
-	//  {product.brand:"Acer"} ,should look like {product.properties.name:"brand",product.properties.value:"Acer"}
-	brandParam := filters["brand"]
-	if brandParam != nil {
-		brand = brandParam[0]
-		delete(filters, "brand")
+	categoryDocument := bson.D{{"category", category}}
+	andStage = bson.A{}
 
-		categoryStage = bson.A{bson.D{{"category", category}, {"brand", brand}}}
-	}
+	andStage = paginate(filters, andStage)
+	categoryDocument = addBrand(filters, categoryDocument)
+
+	andStage = append(andStage, categoryDocument)
 
 	for key, values := range filters {
 		for _, value := range values {
 			properties := bson.D{{"properties.name", key}, {"properties.value", value}}
 			params = append(params, properties)
 		}
-		orParams = append(orParams, bson.D{{"$or", params}})
+		orStage = append(orStage, bson.D{{"$or", params}})
 		params = bson.A{}
 	}
 
-	matchStage := bson.D{{"$and", orParams}, {"$and", categoryStage}}
-	if orParams == nil {
-		matchStage = bson.D{{"$and", categoryStage}}
+	matchStage := bson.D{{"$and", orStage}, {"$and", andStage}}
+	if orStage == nil {
+		matchStage = bson.D{{"$and", andStage}}
 	}
 
 	return matchStage
+}
+
+func paginate(filters map[string][]string, andStage bson.A) bson.A {
+	afterParam := filters["after"]
+	if afterParam != nil {
+		after := afterParam[0]
+		delete(filters, "after")
+
+		id, _ := primitive.ObjectIDFromHex(after)
+		idElement := bson.D{{"_id", bson.D{{"$gt", id}}}}
+		andStage = append(andStage, idElement)
+	}
+	return andStage
+}
+
+func addBrand(filters map[string][]string, categoryDocument bson.D) bson.D {
+	//TODO delete after moving product.brand into properties.name. Example:
+	//  {product.brand:"Acer"}, should look like {product.properties.name:"brand",product.properties.value:"Acer"}
+	brandParam := filters["brand"]
+	if brandParam != nil {
+		brand := brandParam[0]
+		delete(filters, "brand")
+
+		brandElement := bson.E{"brand", brand}
+		categoryDocument = append(categoryDocument, brandElement)
+	}
+	return categoryDocument
 }
 
 func getMinMerchantPrice(merchants []entities.Merchant) float64 {
