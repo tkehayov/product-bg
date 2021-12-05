@@ -41,6 +41,10 @@ func mapFilters(category entities.Category, filters map[string][]string) map[str
 			if name == "after" {
 				results["after"] = value
 			}
+
+			if name == "before" {
+				results["before"] = value
+			}
 		}
 		//results[name] = value
 	}

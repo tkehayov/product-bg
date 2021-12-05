@@ -113,16 +113,37 @@ func filterDocument(category string, filters map[string][]string) bson.D {
 }
 
 func paginate(filters map[string][]string, andStage bson.A) bson.A {
-	afterParam := filters["after"]
-	if afterParam != nil {
-		after := afterParam[0]
-		delete(filters, "after")
+	document := paginationDocument(filters)
 
-		id, _ := primitive.ObjectIDFromHex(after)
-		idElement := bson.D{{"_id", bson.D{{"$gt", id}}}}
+	if document != nil {
+		idElement := bson.D{{"_id", document}}
 		andStage = append(andStage, idElement)
 	}
+
 	return andStage
+}
+
+func paginationDocument(filters map[string][]string) bson.D {
+	var beforeAfterParam string
+	var document bson.D
+	afterParam := filters["after"]
+	beforeParam := filters["before"]
+
+	if afterParam != nil {
+		beforeAfterParam = afterParam[0]
+		delete(filters, "after")
+		id, _ := primitive.ObjectIDFromHex(beforeAfterParam)
+		document = bson.D{{"$gt", id}}
+	}
+
+	if beforeParam != nil {
+		beforeAfterParam = beforeParam[0]
+		delete(filters, "before")
+		id, _ := primitive.ObjectIDFromHex(beforeAfterParam)
+		document = bson.D{{"$lt", id}}
+	}
+
+	return document
 }
 
 func addBrand(filters map[string][]string, categoryDocument bson.D) bson.D {
