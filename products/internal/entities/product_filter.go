@@ -1,5 +1,6 @@
 package entities
 
+//TODO rename
 type ProductFilter struct {
 	Id        string     `bson:"_id"`
 	Name      string     `bson:"name"`

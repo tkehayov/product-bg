@@ -3,9 +3,7 @@ package rest
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
-	log "github.com/sirupsen/logrus"
 	"net/http"
-	"net/url"
 	"product-bg/products/internal/dto"
 	"product-bg/products/internal/repo"
 	"product-bg/products/internal/services"
@@ -36,9 +34,4 @@ func (FilterProduct) Get(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(response)
-}
-
-func DecodeBase64(queryStr2 string) {
-	params, _ := url.ParseQuery(queryStr2)
-	log.Errorln(params)
 }

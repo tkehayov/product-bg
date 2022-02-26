@@ -52,11 +52,13 @@ func (p productFilter) GetFilteredProducts(category string, filters map[string][
 	db := client.Database("products")
 	collection := db.Collection("products")
 
-	matchStage := filterDocument(category, filters)
+	matchStage, sort := filterDocument(category, filters)
 
 	options := options.Find()
 	options.SetLimit(10)
-
+	if sort != nil {
+		options.SetSort(sort)
+	}
 	cur, err := collection.Find(context.TODO(), matchStage, options)
 
 	var products []entities.ProductFilter
@@ -82,7 +84,7 @@ func (p productFilter) GetFilteredProducts(category string, filters map[string][
 	return products
 }
 
-func filterDocument(category string, filters map[string][]string) bson.D {
+func filterDocument(category string, filters map[string][]string) (result bson.D, sort bson.D) {
 	params := bson.A{}
 	var andStage bson.A
 	var orStage bson.A
@@ -90,7 +92,7 @@ func filterDocument(category string, filters map[string][]string) bson.D {
 	categoryDocument := bson.D{{"category", category}}
 	andStage = bson.A{}
 
-	andStage = paginate(filters, andStage)
+	andStage, sort = paginate(filters, andStage)
 	categoryDocument = addBrand(filters, categoryDocument)
 
 	andStage = append(andStage, categoryDocument)
@@ -109,23 +111,24 @@ func filterDocument(category string, filters map[string][]string) bson.D {
 		matchStage = bson.D{{"$and", andStage}}
 	}
 
-	return matchStage
+	return matchStage, sort
 }
 
-func paginate(filters map[string][]string, andStage bson.A) bson.A {
-	document := paginationDocument(filters)
+func paginate(filters map[string][]string, andStage bson.A) (result bson.A, sort bson.D) {
+	document, sort := paginationDocument(filters)
 
 	if document != nil {
 		idElement := bson.D{{"_id", document}}
 		andStage = append(andStage, idElement)
 	}
 
-	return andStage
+	return andStage, sort
 }
 
-func paginationDocument(filters map[string][]string) bson.D {
+func paginationDocument(filters map[string][]string) (result bson.D, sort bson.D) {
 	var beforeAfterParam string
 	var document bson.D
+	var sortAfterBefore bson.D
 	afterParam := filters["after"]
 	beforeParam := filters["before"]
 
@@ -134,6 +137,7 @@ func paginationDocument(filters map[string][]string) bson.D {
 		delete(filters, "after")
 		id, _ := primitive.ObjectIDFromHex(beforeAfterParam)
 		document = bson.D{{"$gt", id}}
+		sortAfterBefore = bson.D{{"_id", 1}}
 	}
 
 	if beforeParam != nil {
@@ -141,9 +145,10 @@ func paginationDocument(filters map[string][]string) bson.D {
 		delete(filters, "before")
 		id, _ := primitive.ObjectIDFromHex(beforeAfterParam)
 		document = bson.D{{"$lt", id}}
+		sortAfterBefore = bson.D{{"_id", -1}}
 	}
 
-	return document
+	return document, sortAfterBefore
 }
 
 func addBrand(filters map[string][]string, categoryDocument bson.D) bson.D {

@@ -8,9 +8,16 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"product-bg/products/internal/database"
+	"product-bg/products/internal/entities"
 	"product-bg/proto/products"
 )
 
+type ProductRepositoryInterface interface {
+	GetProducts(category string, pagination map[string]string) []entities.ProductFilter
+	//GetProducts(category string) []entities.ProductFilter
+}
+
+//TODO REFACTOR with new architecture
 type Product struct {
 	ID         string     `bson:"_id" json:"id"`
 	Name       string     `bson:"name" json:"name"`
