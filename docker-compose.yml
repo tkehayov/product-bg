@@ -48,8 +48,8 @@ services:
       CONSUMER_PORT: 50051
     tty: true
 
-  products-provider:
-    container_name: products-provider
+  merchat-catalog:
+    container_name: merchat-catalog
     image: golang:1.16-alpine3.14
     ports:
       - 8082:8080
@@ -57,7 +57,7 @@ services:
       PRODUCTS_PROVIDER: products-consumer:50051
       PORT: 8080
     volumes:
-      - ./docker/volumes/products-provider/app:/go:ro
+      - ./docker/volumes/merchat-catalog/app:/go:ro
     command: ./main
     tty: true
 

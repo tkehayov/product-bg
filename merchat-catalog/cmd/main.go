@@ -9,7 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"product-bg/products-provider/products"
+	"product-bg/merchat-catalog/products"
 	provider "product-bg/proto/products"
 	"time"
 )
@@ -26,7 +26,7 @@ func main() {
 	log.Info("PRODUCTS PROVIDER SERVICE STARTED")
 	port := os.Getenv("PORT")
 	router := mux.NewRouter()
-	router.HandleFunc("/products-provider", ingest).Methods("POST")
+	router.HandleFunc("/merchat-catalog", ingest).Methods("POST")
 
 	log.Error(http.ListenAndServe(":"+port, router))
 }
