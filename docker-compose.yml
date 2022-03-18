@@ -18,6 +18,21 @@ services:
       PORT: 8080
     tty: true
 
+  products-collector:
+    container_name: products-collector
+    image: golang:1.16-alpine3.14
+    depends_on:
+      - db-products
+    ports:
+      - 8085:8080
+    volumes:
+      - ./docker/volumes/products-collector/app:/go:ro
+    command: ./main
+    environment:
+      MONGO_URL: mongodb://db-products:27017/products
+      PORT: 8080
+    tty: true
+
   products-consumer:
     container_name: products-consumer
     image: golang:1.16-alpine3.14
