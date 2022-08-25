@@ -1,0 +1,36 @@
+<productCatalog xmlns:atom="https://www.w3.org/2005/Atom" version="1.0">
+    <productCategory name="Дисплеи, монитори и проектори">
+        <productGroup name="Монитори">
+            <propertyGroupId>LCD монитори</propertyGroupId>
+            <atom:link
+                    href="https://b2b.also.com/invoke/ActDelivery_HTTP.Inbound/receiveXML_API?j_u=11134342&j_p=E0r34A6d_s_D46B&propertyId=B05001002"
+                    rel="list"/>
+            <propertyGroupId>OLED монитори</propertyGroupId>
+            <atom:link
+                    href="https://b2b.also.com/invoke/ActDelivery_HTTP.Inbound/receiveXML_API?j_u=11134342&j_p=E0r34A6d_s_D46B&propertyId=B05001003"
+                    rel="list"/>
+        </productGroup>
+        <productGroup name="Професионални дисплеи">
+            <propertyGroupId>Професионални дисплеи</propertyGroupId>
+            <atom:link
+                    href="https://b2b.also.com/invoke/ActDelivery_HTTP.Inbound/receiveXML_API?j_u=11134342&j_p=E0r34A6d_s_D46B&propertyId=B05002001"
+                    rel="list"/>
+            <propertyGroupId>Софтуер</propertyGroupId>
+            <atom:link
+                    href="https://b2b.also.com/invoke/ActDelivery_HTTP.Inbound/receiveXML_API?j_u=11134342&j_p=E0r34A6d_s_D46B&propertyId=B05002007"
+                    rel="list"/>
+        </productGroup>
+    </productCategory>
+    <productCategory name="Потребителска електроника">
+        <productGroup name="Телевизори">
+            <propertyGroupId>LED</propertyGroupId>
+            <atom:link
+                    href="https://b2b.also.com/invoke/ActDelivery_HTTP.Inbound/receiveXML_API?j_u=11134342&j_p=E0r34A6d_s_D46B&propertyId=B02001001"
+                    rel="list"/>
+            <propertyGroupId>Аксесоари за телевизори</propertyGroupId>
+            <atom:link
+                    href="https://b2b.also.com/invoke/ActDelivery_HTTP.Inbound/receiveXML_API?j_u=11134342&j_p=E0r34A6d_s_D46B&propertyId=B02001004"
+                    rel="list"/>
+        </productGroup>
+    </productCategory>
+</productCatalog>

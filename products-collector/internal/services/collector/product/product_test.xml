@@ -1,0 +1,15 @@
+<product version="1.5" productId="3820249" groupId="APPLE" codeId="MVVK2ZE/A" ean="190199368941">
+    <name>
+        <![CDATA[ APPLE MBP 16.0 SG/2.3GHZ 8C/16GB/5500M/1 ]]>
+    </name>
+    <vendor>APPLE</vendor>
+    <file type="Datasheet" description="Product overview">
+        <![CDATA[ http://website.com/datasheet.do ]]>
+    </file>
+    <image type="other">
+        <![CDATA[ http://cdn.cnetcontent.com/18/e4/18e4d00c-bfbf-4fb4-bb3b-58267f4b722a.jpg ]]>
+    </image>
+    <image type="other">
+        <![CDATA[ http://cdn.cnetcontent.com/18/e4/18e4d00c-bfbf-4fb4-bb3b-58267f4b722a.jpg ]]>
+    </image>
+</product>

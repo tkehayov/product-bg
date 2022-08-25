@@ -29,6 +29,9 @@ services:
       - ./docker/volumes/products-collector/app:/go:ro
     command: ./main
     environment:
+      ALSO_BASE_URL: ${ALSO_BASE_URL}
+      ALSO_USERNAME: ${ALSO_USERNAME}
+      ALSO_PASSWORD: ${ALSO_PASSWORD}
       MONGO_URL: mongodb://db-products:27017/products
       PORT: 8080
     tty: true

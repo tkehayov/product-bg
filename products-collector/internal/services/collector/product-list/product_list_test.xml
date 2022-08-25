@@ -1,0 +1,30 @@
+<productSet version="1.7" ItemsCollected="194">
+    <product productId="4038670" groupId="LENOVO" codeId="82FE008KBM" ean="195348730525">
+        <name>
+            <![CDATA[ LENOVO IdeaPad 5 i3-1115G4 14inch FHD IPS AG 300N 8GB DDR4 512GB SSD DOS 2Y Platinum ]]>
+        </name>
+        <vendor>LENOVO</vendor>
+        <warrantyQty>24</warrantyQty>
+        <warrantyUnit>2</warrantyUnit>
+        <price currency="BGN">761.36</price>
+        <priceEndUser currency="BGN">999.00</priceEndUser>
+        <stockInfo>
+            <stockInfoValue>OnHand</stockInfoValue>
+            <stockInfoData>5</stockInfoData>
+        </stockInfo>
+    </product>
+    <product productId="3820249" groupId="APPLE" codeId="MVVK2ZE/A" ean="190199368941">
+        <name>
+            <![CDATA[ APPLE 16-inch MacBook Pro with Touch Bar: 2.3GHz 8-core 9th-generation Intel Core i9 processor 1TB - Space Grey ]]>
+        </name>
+        <vendor>APPLE</vendor>
+        <warrantyQty>12</warrantyQty>
+        <warrantyUnit>2</warrantyUnit>
+        <price currency="BGN">5037.26</price>
+        <priceEndUser currency="BGN">6470.00</priceEndUser>
+        <stockInfo>
+            <stockInfoValue>OnOrder</stockInfoValue>
+            <stockInfoData>5</stockInfoData>
+        </stockInfo>
+    </product>
+</productSet>
